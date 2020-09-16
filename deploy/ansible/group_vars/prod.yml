@@ -1,0 +1,3 @@
+docker_registry: "registry.gitlab.com"
+docker_user: "{{ gitlab_user }}"
+docker_pass: "{{ gitlab_pass }}"

@@ -1,0 +1,36 @@
+---
+- name: setup server
+  hosts: prod
+  become: yes
+
+  tasks:
+    - name: "copy files"
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+      with_items:
+        - { dest: "/opt/app/docker-compose.yml", src: "./files/docker-compose.release.yml" }
+        - { dest: "/opt/app/gen-cert.sh", src: "./files/gen-cert.sh" }
+        - { dest: "/opt/app/conf/nginx.conf", src: "./files/conf/nginx.conf" }
+
+    - name: "copy templated files"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+      with_items:
+        - { dest: "/opt/app/run.sh", src: "./templates/run.sh.j2" }
+
+    - name: "restart server and migration"
+      shell: "cd /opt/app/ ; /bin/sh run.sh"
+
+    - name: Run https certificate renew
+      cron:
+        name: "Run workflow"
+        day: "*/15"
+        job: "docker run -t --rm -v certs:/etc/letsencrypt -v /opt/app/certs-data:/data/letsencrypt -v /var/log/letsencrypt:/var/log/letsencrypt deliverous/certbot renew --webroot --webroot-path=/data/letsencrypt && cd /opt/app/ && /usr/local/bin/docker-compose restart nginx >/dev/null 2>&1"
+        state: present
+        user: "{{ ansible_user }}"
