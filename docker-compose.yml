@@ -26,9 +26,9 @@ services:
   #   ports:
   #     - "8140:8123"
 
-  # nsq:
-  #   image: nsqio/nsq:v1.2.0
-  #   container_name: analytics_msq
-  #   ports:
-  #     - "4140:4150"
-  #     - "4141:4151"
+  nsq:
+    image: nsqio/nsq:v1.2.0
+    container_name: analytics_msq
+    ports:
+      - "4140:4150"
+      - "4141:4151"
