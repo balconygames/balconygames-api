@@ -31,6 +31,6 @@
       cron:
         name: "Run workflow"
         day: "*/15"
-        job: "docker run -t --rm -v certs:/etc/letsencrypt -v /opt/app/certs-data:/data/letsencrypt -v /var/log/letsencrypt:/var/log/letsencrypt deliverous/certbot renew --webroot --webroot-path=/data/letsencrypt && cd /opt/app/ && /usr/local/bin/docker-compose restart nginx >/dev/null 2>&1"
+        job: "sh /opt/app/gen-cert.sh ; docker run -t --rm -v certs:/etc/letsencrypt -v /opt/app/certs-data:/data/letsencrypt -v /var/log/letsencrypt:/var/log/letsencrypt deliverous/certbot renew --webroot --webroot-path=/data/letsencrypt && cd /opt/app/ && /usr/local/bin/docker-compose restart nginx >/dev/null 2>&1"
         state: present
         user: "{{ ansible_user }}"
