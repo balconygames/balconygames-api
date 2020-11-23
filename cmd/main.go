@@ -6,9 +6,7 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	authmodule "gitlab.com/balconygames/analytics/modules/auth"
-	collectormodule "gitlab.com/balconygames/analytics/modules/collector"
 	leaderboardmodule "gitlab.com/balconygames/analytics/modules/leaderboard"
-	pixelmodule "gitlab.com/balconygames/analytics/modules/pixel"
 	primarymodule "gitlab.com/balconygames/analytics/modules/primary"
 	"gitlab.com/balconygames/analytics/pkg/runtime"
 )
@@ -34,8 +32,6 @@ func run() error {
 		authmodule.New,
 		primarymodule.New,
 		leaderboardmodule.New,
-		collectormodule.New,
-		pixelmodule.New,
 	}
 
 	for _, m := range runtimes {

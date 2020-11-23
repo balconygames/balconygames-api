@@ -17,33 +17,33 @@ services:
         max-file: "3"
       driver: "json-file"
 
-  clickhouse:
-    image: yandex/clickhouse-server:19.16.19.85
-    container_name: analytics_clickhouse
-    ports:
-      - "8140:8123"
-    volumes:
-      - ./clickhouse:/var/lib/clickhouse
-    logging:
-      options:
-        max-size: "30m"
-        max-file: "3"
-      driver: "json-file"
-
-  nsq:
-    image: nsqio/nsq:v1.2.0
-    command: /nsqlookupd
-    container_name: analytics_msq
-    ports:
-      - "4140:4150"
-      - "4141:4151"
-    volumes:
-      - ./nsq:/var/lib/nsq
-    logging:
-      options:
-        max-size: "30m"
-        max-file: "3"
-      driver: "json-file"
+#  clickhouse:
+#    image: yandex/clickhouse-server:19.16.19.85
+#    container_name: analytics_clickhouse
+#    ports:
+#      - "8140:8123"
+#    volumes:
+#      - ./clickhouse:/var/lib/clickhouse
+#    logging:
+#      options:
+#        max-size: "30m"
+#        max-file: "3"
+#      driver: "json-file"
+#
+#  nsq:
+#    image: nsqio/nsq:v1.2.0
+#    command: /nsqlookupd
+#    container_name: analytics_msq
+#    ports:
+#      - "4140:4150"
+#      - "4141:4151"
+#    volumes:
+#      - ./nsq:/var/lib/nsq
+#    logging:
+#      options:
+#        max-size: "30m"
+#        max-file: "3"
+#      driver: "json-file"
 
   redis:
     image: redis:6.0.4-alpine
