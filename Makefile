@@ -40,6 +40,10 @@ console:
 	ssh -i ~/.ssh/balconygames.pem $(PROD_SERVER)
 .PHONY: console
 
+new.console:
+	ssh $(NEW_PROD_SERVER)
+.PHONY: new.console
+
 deploy: release deploy.release
 .PHONY: deploy
 
