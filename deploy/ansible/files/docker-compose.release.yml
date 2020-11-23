@@ -64,14 +64,14 @@ services:
       - "5000:5000"
     depends_on:
       - postgres
-      - nsq
+      # - nsq
       - migrate
       - redis
     links:
       - postgres
-      - nsq
+      # - nsq
       - redis
-      - clickhouse
+      # - clickhouse
     command: "/main api"
     environment: &server_environment
       ENV: "prod"
