@@ -1,0 +1,2 @@
+[servers]
+prod ansible_host=168.119.48.63 ansible_user=root ansible_connection=ssh
