@@ -29,12 +29,11 @@
         - { src: "/data/clickhouse", dest: "/opt/app/clickhouse" }
         - { src: "/data/redis", dest: "/opt/app/redis" }
 
-    - name: "install packages"
-      yum:
-        name:
-          - docker
-          - python3
-        state: present
+    - include: ./tasks/docker_ubuntu.yml
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - include: ./tasks/docker_centos.yml
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
     - name: "add user to docker group"
       user:

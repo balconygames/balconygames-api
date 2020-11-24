@@ -41,7 +41,7 @@ console:
 .PHONY: console
 
 new.console:
-	ssh $(NEW_PROD_SERVER)
+	ssh root@$(NEW_PROD_SERVER)
 .PHONY: new.console
 
 deploy: release deploy.release
