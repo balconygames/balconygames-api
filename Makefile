@@ -37,12 +37,8 @@ release:
 .PHONY: release
 
 console:
-	ssh -i ~/.ssh/balconygames.pem $(PROD_SERVER)
+	ssh root@$(PROD_SERVER)
 .PHONY: console
-
-new.console:
-	ssh root@$(NEW_PROD_SERVER)
-.PHONY: new.console
 
 deploy: release deploy.release
 .PHONY: deploy
