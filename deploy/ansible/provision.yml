@@ -4,47 +4,7 @@
   become: yes
 
   tasks:
-    - name: "create directories"
-      file:
-        path: "{{ item }}"
-        state: "directory"
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
-      with_items:
-        - "/opt/app"
-        - "/opt/app/conf"
-        - "/opt/app/certs"
-        - "/opt/app/certs-data"
-        - "/data/clickhouse"
-        - "/data/redis"
-        - "/data/postgres"
+    - include: ./tasks/dirs.yml
 
-    - name: "create symlinks"
-      file:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-        state: "link"
-      with_items:
-        - { src: "/data/postgres", dest: "/opt/app/postgres" }
-        - { src: "/data/clickhouse", dest: "/opt/app/clickhouse" }
-        - { src: "/data/redis", dest: "/opt/app/redis" }
-
-    - include: ./tasks/docker_ubuntu.yml
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
-    - include: ./tasks/docker_centos.yml
-      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-
-    - name: "add user to docker group"
-      user:
-        name: "{{ ansible_user }}"
-        groups: docker
-        append: yes
-
-    - name: "install docker-compose"
-      command: "pip3 install docker-compose"
-
-    - name: "docker service started"
-      service:
-        name: docker
-        state: started
+    - include: ./tasks/docker/docker.yml
+    - include: ./tasks/dev/dev.yml
