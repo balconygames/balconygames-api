@@ -10,7 +10,7 @@ services:
     ports:
       - "5440:5432"
     volumes:
-      - ./postgres:/var/lib/postgresql
+      - ./postgres:/var/lib/postgresql/
     logging:
       options:
         max-size: "30m"
@@ -23,7 +23,7 @@ services:
 #    ports:
 #      - "8140:8123"
 #    volumes:
-#      - ./clickhouse:/var/lib/clickhouse
+#      - ./clickhouse:/var/lib/clickhouse/
 #    logging:
 #      options:
 #        max-size: "30m"
@@ -38,7 +38,7 @@ services:
 #      - "4140:4150"
 #      - "4141:4151"
 #    volumes:
-#      - ./nsq:/var/lib/nsq
+#      - ./nsq:/var/lib/nsq/
 #    logging:
 #      options:
 #        max-size: "30m"
