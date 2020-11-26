@@ -1,6 +1,7 @@
 current_dir = $(shell pwd)
 
-DOCKER_REGISTRY=registry.gitlab.com/balconygames/analytics
+DOCKER_REGISTRY_SERVER=registry.gitlab.com/balconygames/analytics
+DOCKER_REGISTRY_DASHBOARD=registry.gitlab.com/balconygames/analytics/dashboard
 DOCKER_COMPOSE=pipenv run docker-compose
 
 init:
@@ -31,10 +32,20 @@ lint:
 	docker run --rm -v $(current_dir):/app -w /app golangci/golangci-lint:v1.24.0 golangci-lint run -v ./...
 .PHONY: lint
 
-release:
-	docker build -t $(DOCKER_REGISTRY):latest .
-	docker push $(DOCKER_REGISTRY):latest
+release: release.server release.dashboard
 .PHONY: release
+
+release.server:
+	docker build -f Dockerfile -t $(DOCKER_REGISTRY_SERVER):latest .
+	docker push $(DOCKER_REGISTRY_SERVER):latest
+.PHONY: release.server
+
+release.dashboard:
+	cd web/
+	docker build -f Dockerfile.release -t $(DOCKER_REGISTRY_DASHBOARD):latest .
+	docker push $(DOCKER_REGISTRY_DASHBOARD):latest
+	cd ../
+.PHONY: release.dashboard
 
 console:
 	ssh root@$(PROD_SERVER)

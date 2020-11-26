@@ -6,7 +6,7 @@
         <div
           class="absolute top-0 w-full h-full bg-gray-900"
           style="background-size: 100%; background-repeat: no-repeat;"
-          :style="{'background-image': 'url(' + require('../assets/img/register_bg_2.png') + ')'}"
+          :style="{'background-image': 'url(' + require('../../assets/img/register_bg_2.png') + ')'}"
         ></div>
         <div class="container mx-auto px-4 h-full">
           <div class="flex content-center items-center justify-center h-full">
@@ -29,7 +29,7 @@
                       <img
                         alt="..."
                         class="w-5 mr-1"
-                        src="../assets/img/github.svg"
+                        src="../../assets/img/github.svg"
                       />Github</button
                     ><button
                       class="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
@@ -39,7 +39,7 @@
                       <img
                         alt="..."
                         class="w-5 mr-1"
-                        src="../assets/img/google.svg"
+                        src="../../assets/img/google.svg"
                       />Google
                     </button>
                   </div>
@@ -141,11 +141,11 @@
             username: this.username,
             password: this.password,
           })
-            .then((response) => {
-              console.warn('SUCCESS login', response);
+            .then(() => { // response
+              // console.warn('SUCCESS login', response);
             })
-            .catch((err) => {
-              console.error('ERROR! in login', err);
+            .catch(() => { // err
+              // console.error('ERROR! in login', err);
             });
         }
       }

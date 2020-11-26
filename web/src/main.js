@@ -2,7 +2,11 @@ import Vue from 'vue'
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
+import Login from './pages/login/Login'
+
 Vue.config.productionTip = false
+
+const routes = {}
 
 new Vue({
   data: {

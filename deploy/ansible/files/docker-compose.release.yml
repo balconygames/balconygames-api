@@ -156,13 +156,11 @@ services:
   metabase-app:
     image: metabase/metabase
     restart: always
-    ports:
-      - 3001:3000
     volumes:
       - /home/app/metabase-data:/metabase-data
     environment:
       MB_DB_TYPE: postgres
-      MB_DB_DBNAME: metabase
+      MB_DB_DBNAME: postgres
       MB_DB_PORT: 5432
       MB_DB_USER: postgres
       MB_DB_PASS: 59bf71f6-ca01-431b-95a3-1fb1d7aa7847
@@ -171,6 +169,15 @@ services:
       - postgres
     links:
       - postgres
+    logging:
+      options:
+        max-size: "30m"
+        max-file: "3"
+      driver: "json-file"
+
+  web:
+    image: registry.gitlab.com/balconygames/analytics/dashboard:latest
+    restart: always
     logging:
       options:
         max-size: "30m"
