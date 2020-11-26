@@ -14,6 +14,8 @@
         - { dest: "/opt/app/docker-compose.yml", src: "./files/docker-compose.release.yml" }
         - { dest: "/opt/app/gen-cert.sh", src: "./files/gen-cert.sh" }
         - { dest: "/opt/app/conf/nginx.conf", src: "./files/conf/nginx.conf" }
+        - { dest: "/opt/app/conf/metabase.nginx.conf", src: "./files/conf/metabase.nginx.conf" }
+        - { dest: "/opt/app/conf/dashboard.nginx.conf", src: "./files/conf/dashboard.nginx.conf" }
 
     - name: "copy templated files"
       template:
