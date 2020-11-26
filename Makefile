@@ -41,10 +41,8 @@ release.server:
 .PHONY: release.server
 
 release.dashboard:
-	cd web/
-	docker build -f Dockerfile.release -t $(DOCKER_REGISTRY_DASHBOARD):latest .
-	docker push $(DOCKER_REGISTRY_DASHBOARD):latest
-	cd ../
+	cd web/ ; docker build -f Dockerfile.release -t $(DOCKER_REGISTRY_DASHBOARD):latest .
+	cd web/ ; docker push $(DOCKER_REGISTRY_DASHBOARD):latest
 .PHONY: release.dashboard
 
 console:
