@@ -36,7 +36,7 @@ release: release.server release.dashboard
 .PHONY: release
 
 release.server:
-	docker build -f Dockerfile -t $(DOCKER_REGISTRY_SERVER):latest .
+	docker build -f Dockerfile.release -t $(DOCKER_REGISTRY_SERVER):latest .
 	docker push $(DOCKER_REGISTRY_SERVER):latest
 .PHONY: release.server
 

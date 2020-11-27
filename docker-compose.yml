@@ -20,6 +20,20 @@ services:
         max-file: "3"
       driver: "json-file"
 
+  web:
+    build: ./web/
+    container_name: analytics_web
+    ports:
+      - 9000:8080
+    logging:
+      options:
+        max-size: "30m"
+        max-file: "3"
+      driver: "json-file"
+
+  server:
+    build: ./
+
   # clickhouse:
   #   image: yandex/clickhouse-server:19.16.19.85
   #   container_name: analytics_clickhouse
