@@ -33,6 +33,13 @@ services:
 
   server:
     build: ./
+    container_name: analytics_server
+    command: /bin/ash
+    logging:
+      options:
+        max-size: "30m"
+        max-file: "3"
+      driver: "json-file"
 
   # clickhouse:
   #   image: yandex/clickhouse-server:19.16.19.85

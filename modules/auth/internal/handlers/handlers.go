@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/pkg/errors"
@@ -27,7 +28,7 @@ func New(s *service.Service, l *zap.SugaredLogger) *Handler {
 	}
 }
 
-type syncRequest struct {
+type syncAnomRequest struct {
 	// required to be here
 	DeviceID string `json:"device_id"`
 
@@ -36,15 +37,20 @@ type syncRequest struct {
 	PropertiesSections []string `json:"props_sections"`
 }
 
-type syncResponse struct {
+type syncAnomResponse struct {
 	UserID   string `json:"user_id"`
 	UserName string `json:"user_name"`
 	JWT      string `json:"jwt"`
 
 	PropertiesSections []*models.Properties `json:"props_sections"`
+
+	// Timestamp could be used to sync the server time
+	// and player time in case of using for daily bonuses
+	// or ther stuff in the game.
+	Timestamp int64 `json:"timestamp"`
 }
 
-type usersSyncRequest struct {
+type syncRegRequest struct {
 	// required to be here
 	DeviceID string `json:"device_id"`
 	GuestID  string `json:"guest_id"`
@@ -60,7 +66,7 @@ type usersSyncRequest struct {
 	PropertiesSections []string `json:"props_sections"`
 }
 
-type usersSyncResponse struct {
+type syncRegResponse struct {
 	UserID   string `json:"user_id"`
 	UserName string `json:"user_name"`
 	GuestID  string `json:"guest_id"`
@@ -71,11 +77,20 @@ type usersSyncResponse struct {
 	JWT string `json:"jwt"`
 
 	PropertiesSections []*models.Properties `json:"props_sections"`
+
+	// Timestamp could be used to sync the server time
+	// and player time in case of using for daily bonuses
+	// or ther stuff in the game.
+	Timestamp int64 `json:"timestamp"`
 }
 
-// SyncHandler should start collecting the users and build user_archive records
+func timestamp() int64 {
+	return time.Now().Unix()
+}
+
+// SyncAnomHandler should start collecting the users and build user_archive records
 // it should have user_id, device_id, email, network_id
-func (h *Handler) SyncHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) SyncAnomHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	gameID := chi.URLParam(r, "game_id")
@@ -83,18 +98,18 @@ func (h *Handler) SyncHandler(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger.With("game_id", gameID, "app_id", appID)
 
-	data := syncRequest{}
+	data := syncAnomRequest{}
 	err = httpreq.Read(r, &data)
 	if err != nil {
 		httpreq.Error(w, errors.Wrap(err, "can't read sync body"))
 		return
 	}
 
-	// block spammer
-	if data.DeviceID == "e4f5142c7553c1bddefaee1e3cc00d1e" {
-		httpreq.NotImplemented(w)
-		return
-	}
+	// // block spammer
+	// if data.DeviceID == "e4f5142c7553c1bddefaee1e3cc00d1e" {
+	// 	httpreq.NotImplemented(w)
+	// 	return
+	// }
 
 	// sign up request should converted
 	// to models user and synced up
@@ -133,19 +148,20 @@ func (h *Handler) SyncHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf("respond with properties: %v", properties)
 
-	out := &syncResponse{
+	out := &syncAnomResponse{
 		PropertiesSections: properties,
 		UserID:             user.Scope.UserID,
 		UserName:           user.Name,
 		JWT:                jwt,
+		Timestamp:          timestamp(),
 	}
 
 	httpreq.JSON(w, out)
 }
 
-// UsersSyncHandler should start collecting the users and build user_archive records
+// SyncRegHandler should start collecting the users and build user_archive records
 // it should have user_id, device_id, email, network_id
-func (h *Handler) UsersSyncHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) SyncRegHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	gameID := chi.URLParam(r, "game_id")
@@ -153,7 +169,7 @@ func (h *Handler) UsersSyncHandler(w http.ResponseWriter, r *http.Request) {
 
 	log := h.logger.With("game_id", gameID, "app_id", appID)
 
-	data := usersSyncRequest{}
+	data := syncRegRequest{}
 	err = httpreq.Read(r, &data)
 	if err != nil {
 		httpreq.Error(w, errors.Wrap(err, "can't read sync body"))
@@ -161,10 +177,10 @@ func (h *Handler) UsersSyncHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// block spammer
-	if data.DeviceID == "e4f5142c7553c1bddefaee1e3cc00d1e" {
-		httpreq.NotImplemented(w)
-		return
-	}
+	// if data.DeviceID == "e4f5142c7553c1bddefaee1e3cc00d1e" {
+	// 	httpreq.NotImplemented(w)
+	// 	return
+	// }
 
 	// sign up request should converted
 	// to models user and synced up
@@ -208,7 +224,7 @@ func (h *Handler) UsersSyncHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Debugf("respond with properties: %v", properties)
 
-	out := &usersSyncResponse{
+	out := &syncRegResponse{
 		PropertiesSections: properties,
 
 		UserID:   user.Scope.UserID,
@@ -219,6 +235,8 @@ func (h *Handler) UsersSyncHandler(w http.ResponseWriter, r *http.Request) {
 
 		Network:   user.Network,
 		NetworkID: user.NetworkID,
+
+		Timestamp: timestamp(),
 	}
 
 	httpreq.JSON(w, out)

@@ -90,7 +90,7 @@ func (s *serviceSuite) TestRequestHandlerToVerifyToken() {
 		router = r1
 
 		r.WithClientTokenSigner(r1, func(r2 chi.Router) {
-			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/anonymous/sync", h.SyncHandler)
+			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/anonymous/sync", h.SyncAnomHandler)
 		})
 	})
 
@@ -134,8 +134,8 @@ func (s *serviceSuite) TestUserWorkflow() {
 		router = r1
 
 		r.WithClientTokenSigner(r1, func(r2 chi.Router) {
-			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/anonymous/sync", h.SyncHandler)
-			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/users/sync", h.UsersSyncHandler)
+			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/anonymous/sync", h.SyncAnomHandler)
+			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/users/sync", h.SyncRegHandler)
 		})
 	})
 
@@ -175,7 +175,7 @@ func (s *serviceSuite) TestUserWorkflow() {
 	s.Require().NoError(err)
 	s.Require().NotEmpty(realResp.UserID)
 	s.Require().Equal(anomResp.UserID, realResp.GuestID)
-	s.Require().NotEqual(anomResp.UserID, realResp.UserID)
+	s.Require().Equal(anomResp.UserID, realResp.UserID)
 	s.Require().NotEqual(anomResp.JWT, realResp.JWT)
 	row := s.PostgresPool.QueryRow(context.Background(),
 		"SELECT COUNT(*) FROM users")
@@ -192,7 +192,7 @@ func (s *serviceSuite) TestUserWorkflow() {
 	s.Require().NoError(err)
 	s.Require().NotEmpty(realResp.UserID)
 	s.Require().Equal(anomResp.UserID, realResp.GuestID)
-	s.Require().NotEqual(anomResp.UserID, realResp.UserID)
+	s.Require().Equal(anomResp.UserID, realResp.UserID)
 	s.Require().NotEqual(anomResp.JWT, realResp.JWT)
 	row = s.PostgresPool.QueryRow(context.Background(),
 		"SELECT COUNT(*) FROM users")
@@ -216,7 +216,7 @@ func (s *serviceSuite) TestUserWorkflow() {
 	s.Require().NoError(err)
 	s.Require().NotEmpty(realResp.UserID)
 	s.Require().Equal(anomResp.UserID, realResp.GuestID)
-	s.Require().NotEqual(anomResp.UserID, realResp.UserID)
+	s.Require().Equal(anomResp.UserID, realResp.UserID)
 	s.Require().NotEqual(anomResp.JWT, realResp.JWT)
 	row = s.PostgresPool.QueryRow(context.Background(),
 		"SELECT COUNT(*) FROM users")

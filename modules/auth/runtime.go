@@ -68,8 +68,8 @@ func withSpec(r *runtime.Runtime, s spec) error {
 		// ==== BEGIN CLIENT routes
 		// pass token signer instance in context
 		r.WithClientTokenSigner(r1, func(r2 chi.Router) {
-			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/anonymous/sync", h.SyncHandler)
-			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/users/sync", h.UsersSyncHandler)
+			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/anonymous/sync", h.SyncAnomHandler)
+			r2.Post("/auth/v1/games/{game_id}/apps/{app_id}/users/sync", h.SyncRegHandler)
 
 			r2.Group(func(i chi.Router) {
 				i.Use(h.FacebookMiddleware)
