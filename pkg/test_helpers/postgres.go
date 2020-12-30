@@ -18,6 +18,8 @@ import (
 	"gitlab.com/balconygames/analytics/pkg/postgres"
 )
 
+var teardownTimeout = 300 * time.Millisecond
+
 type PostgresSuite struct {
 	suite.Suite
 
@@ -77,7 +79,7 @@ func (s *PostgresSuite) SetupTest() {
 	if _, ok := err.(*os.PathError); !ok {
 		require.NoError(s.T(), err)
 	}
-	m.Close()
+	_, _ = m.Close()
 
 	s.PostgresPool, err = pgxpool.Connect(ctx, s.Config.URL())
 	require.NoError(s.T(), err)
@@ -100,7 +102,7 @@ func (s *PostgresSuite) TearDownTest() {
 			// idleConnections != allConnections
 			// no reasons for now.
 			waiting.Done()
-		case <-time.After(300 * time.Millisecond):
+		case <-time.After(teardownTimeout):
 			waiting.Done()
 			return
 		}

@@ -18,10 +18,12 @@ import (
 )
 
 const DefaultDB = "postgres"
+const dbResetCommand = "db.reset"
+const dbMigrateCommand = "db.migrate"
 
 func (r *Runtime) WithMigrations(path string, pgConfig postgres.Config) error {
 	// only allowed in dev
-	if r.action == "db.reset" {
+	if r.action == dbResetCommand {
 		if !r.spec.Dev() {
 			return errors.Errorf("db reset can't be runnable in dev environment", r.spec.Env)
 		}
@@ -32,7 +34,7 @@ func (r *Runtime) WithMigrations(path string, pgConfig postgres.Config) error {
 		}
 	}
 
-	if r.action == "db.migrate" || r.action == "db.reset" {
+	if r.action == dbMigrateCommand || r.action == dbResetCommand {
 		err := r.migrate(path, pgConfig)
 		if err != nil {
 			return err
@@ -84,7 +86,7 @@ func (r *Runtime) migrate(path string, pgConfig postgres.Config) error {
 
 	if v := upVersion(); v != 0 {
 		fmt.Printf("[MIGRATE] force migrate to %d\n", v)
-		m.Force(v)
+		_ = m.Force(v)
 	}
 
 	if err != nil {

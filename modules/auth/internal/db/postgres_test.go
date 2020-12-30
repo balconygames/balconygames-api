@@ -33,7 +33,7 @@ func TestEntrypointSuite(t *testing.T) {
 func (s *serviceSuite) TestAnomSync() {
 	repo := NewPostgresRepository(s.PostgresPool)
 
-	repo.AnomSync(context.Background(), &models.User{
+	_ = repo.AnomSync(context.Background(), &models.User{
 		Scope: sharedmodels.Scope{
 			AppID:  appID,
 			GameID: gameID,
@@ -43,14 +43,14 @@ func (s *serviceSuite) TestAnomSync() {
 
 	var id, deviceID string
 	row := s.PostgresPool.QueryRow(context.Background(), `SELECT user_id, device_id FROM anonymouses LIMIT 1`)
-	row.Scan(&id, &deviceID)
+	_ = row.Scan(&id, &deviceID)
 	s.Require().NotEmpty(id)
 	s.Require().NotEmpty(deviceID)
 	s.Require().Equal("device-1", deviceID)
 
 	var anomCount int64
 	countRow := s.PostgresPool.QueryRow(context.Background(), `SELECT COUNT(*) FROM anonymouses LIMIT 1`)
-	row.Scan(&countRow)
+	_ = row.Scan(&countRow)
 	s.Require().Equal(1, anomCount)
 }
 
@@ -64,7 +64,7 @@ func (s *serviceSuite) TestAnomSyncNoDuplicates() {
 		},
 		DeviceID: deviceID,
 	}
-	repo.AnomSync(context.Background(), user1)
+	_ = repo.AnomSync(context.Background(), user1)
 
 	user2 := &models.User{
 		Scope: sharedmodels.Scope{
@@ -73,11 +73,11 @@ func (s *serviceSuite) TestAnomSyncNoDuplicates() {
 		},
 		DeviceID: deviceID,
 	}
-	repo.AnomSync(context.Background(), user2)
+	_ = repo.AnomSync(context.Background(), user2)
 
 	var id, deviceID string
 	row := s.PostgresPool.QueryRow(context.Background(), `SELECT user_id, device_id FROM anonymouses LIMIT 1`)
-	row.Scan(&id, &deviceID)
+	_ = row.Scan(&id, &deviceID)
 	s.Require().NotEmpty(id)
 	s.Require().NotEmpty(user1.UserID)
 	s.Require().Equal(user1.UserID, id)
@@ -85,7 +85,7 @@ func (s *serviceSuite) TestAnomSyncNoDuplicates() {
 
 	var anomCount int64
 	countRow := s.PostgresPool.QueryRow(context.Background(), `SELECT COUNT(*) FROM anonymouses LIMIT 1`)
-	row.Scan(&countRow)
+	_ = row.Scan(&countRow)
 	s.Require().Equal(1, anomCount)
 }
 
@@ -95,7 +95,7 @@ func (s *serviceSuite) TestAnomSyncSameUsers() {
 
 	repo := NewPostgresRepository(s.PostgresPool)
 
-	repo.AnomSync(context.Background(), &models.User{
+	_ = repo.AnomSync(context.Background(), &models.User{
 		Scope: sharedmodels.Scope{
 			AppID:  appID,
 			GameID: gameID,
@@ -103,9 +103,9 @@ func (s *serviceSuite) TestAnomSyncSameUsers() {
 		DeviceID: deviceID,
 	})
 	row = s.PostgresPool.QueryRow(context.Background(), `SELECT user_id FROM anonymouses LIMIT 1`)
-	row.Scan(&id1)
+	_ = row.Scan(&id1)
 
-	repo.AnomSync(context.Background(), &models.User{
+	_ = repo.AnomSync(context.Background(), &models.User{
 		Scope: sharedmodels.Scope{
 			AppID:  appID,
 			GameID: gameID,
@@ -113,7 +113,7 @@ func (s *serviceSuite) TestAnomSyncSameUsers() {
 		DeviceID: deviceID,
 	})
 	row = s.PostgresPool.QueryRow(context.Background(), `SELECT user_id FROM anonymouses LIMIT 1`)
-	row.Scan(&id2)
+	_ = row.Scan(&id2)
 
 	s.Require().Equal(id1, id2)
 }

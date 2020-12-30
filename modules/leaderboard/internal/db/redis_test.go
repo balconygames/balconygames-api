@@ -81,10 +81,10 @@ func (s serviceRedisSuite) TestSetScore() {
 
 	repo := NewRedisRepository(s.Conn, logger)
 	repo.flush()
-	repo.SetScore(context.Background(), score1)
-	repo.SetScore(context.Background(), score2)
-	repo.SetScore(context.Background(), score3)
-	repo.SetScore(context.Background(), score4)
+	_ = repo.SetScore(context.Background(), score1)
+	_ = repo.SetScore(context.Background(), score2)
+	_ = repo.SetScore(context.Background(), score3)
+	_ = repo.SetScore(context.Background(), score4)
 
 	key := scoreKey(score1.LeaderboardID)
 	result, err := repo.conn.ZRevRank(context.Background(), key, topUserID).Result()
@@ -201,8 +201,8 @@ func (s serviceRedisSuite) TestMyAndTopScore() {
 	repo := NewRedisRepository(s.Conn, logger)
 	repo.flush()
 
-	repo.SetScore(context.Background(), score1)
-	repo.SetScore(context.Background(), score2)
+	_ = repo.SetScore(context.Background(), score1)
+	_ = repo.SetScore(context.Background(), score2)
 
 	scores, err := repo.ListScores(context.Background(), sharedmodels.Scope{
 		GameID: gameID,

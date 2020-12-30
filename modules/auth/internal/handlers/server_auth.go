@@ -6,35 +6,17 @@ import (
 	httpreq "gitlab.com/balconygames/analytics/pkg/http"
 )
 
-type serverSigninRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type serverSigninResponse struct {
-	ID string `json:"id"`
-}
-
+// ServerSignin used to use to make the dashboard application
 func (h *Handler) ServerSignin(w http.ResponseWriter, r *http.Request) {
 	httpreq.NotImplemented(w)
 }
 
+// ServerSignout log out the user
 func (h *Handler) ServerSignout(w http.ResponseWriter, r *http.Request) {
 	httpreq.NotImplemented(w)
 }
 
-type serverSignupRequest struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-
-	Password             string `json:"password"`
-	PasswordConfirmation string `json:"password_confirmation"`
-}
-
-type serverSignupResponse struct {
-	ID string
-}
-
+// ServerSignup creates the new user
 func (h *Handler) ServerSignup(w http.ResponseWriter, r *http.Request) {
 	httpreq.NotImplemented(w)
 }

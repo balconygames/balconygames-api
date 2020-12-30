@@ -15,12 +15,14 @@ import (
 	sharedmodels "gitlab.com/balconygames/analytics/shared/models"
 )
 
+// Handler have the basic requirements for handlers
 type Handler struct {
 	service *service.Service
 
 	logger *zap.SugaredLogger
 }
 
+// New creates the new instance of Handler
 func New(s *service.Service, l *zap.SugaredLogger) *Handler {
 	return &Handler{
 		service: s,
@@ -46,7 +48,7 @@ type syncAnomResponse struct {
 
 	// Timestamp could be used to sync the server time
 	// and player time in case of using for daily bonuses
-	// or ther stuff in the game.
+	// or other stuff in the game.
 	Timestamp int64 `json:"timestamp"`
 }
 
@@ -80,7 +82,7 @@ type syncRegResponse struct {
 
 	// Timestamp could be used to sync the server time
 	// and player time in case of using for daily bonuses
-	// or ther stuff in the game.
+	// or other stuff in the game.
 	Timestamp int64 `json:"timestamp"`
 }
 

@@ -66,5 +66,4 @@ func (m *NSQ) Push(message interface{}) error {
 
 // Close message queue client
 func (m *NSQ) Close() {
-	m.Close()
 }

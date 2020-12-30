@@ -21,7 +21,7 @@ linters-settings:
   gocyclo:
     min-complexity: 15
   goimports:
-    local-prefixes: gitlab.com/probackup/probackup
+    local-prefixes: gitlab.com/balconygames/analytics
   golint:
     min-confidence: 0
   gomnd:

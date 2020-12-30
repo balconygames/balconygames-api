@@ -25,15 +25,15 @@ func EncodeJSON(o interface{}) []byte {
 }
 
 func JSON(w http.ResponseWriter, o interface{}) {
-	w.Write(EncodeJSON(o))
+	_, _ = w.Write(EncodeJSON(o))
 }
 
 func OK(w http.ResponseWriter) {
-	w.Write(JSONB("response", "OK"))
+	_, _ = w.Write(JSONB("response", "OK"))
 }
 
 func NotImplemented(w http.ResponseWriter) {
-	w.Write(JSONB("response", "not_implemented"))
+	_, _ = w.Write(JSONB("response", "not_implemented"))
 }
 
 func Read(r *http.Request, out interface{}) error {

@@ -21,6 +21,9 @@ import (
 	"gitlab.com/balconygames/analytics/pkg/logging"
 )
 
+var shutdownTimeout = 5 * time.Second
+var requestTimeout = 60 * time.Second
+
 type InitFunc func(*Runtime) error
 
 type Spec struct {
@@ -59,6 +62,9 @@ type Runtime struct {
 	Logger *zap.SugaredLogger
 }
 
+const apiModule = "api"
+
+// New creates new runtime
 func New(action string, s Spec) *Runtime {
 	r := &Runtime{
 		router:  chi.NewRouter(),
@@ -70,7 +76,7 @@ func New(action string, s Spec) *Runtime {
 		action:  action,
 	}
 
-	if r.action == "db.migrate" || r.action == "db.reset" {
+	if r.action == dbMigrateCommand || r.action == dbResetCommand {
 		// We should run only api layer, migrate is only runnable
 		// once.
 		return r
@@ -87,7 +93,7 @@ func New(action string, s Spec) *Runtime {
 		// Set a timeout value on the request context (ctx), that will signal
 		// through ctx.Done() that the request has timed out and further
 		// processing should be stopped.
-		r.router.Use(middleware.Timeout(60 * time.Second))
+		r.router.Use(middleware.Timeout(requestTimeout))
 	}
 
 	return r
@@ -254,7 +260,7 @@ func (r *Runtime) Run() error {
 		logger.Errorf("received error signal: %s", tracerr.Wrap(err))
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
 	defer cancel()
 
 	if err := httpServer.Shutdown(ctx); err != nil {
@@ -274,7 +280,6 @@ func (r *Runtime) Close() {
 
 func (r *Runtime) Wait() {
 	<-r.readyCh
-	return
 }
 
 func (r *Runtime) printRoutes() {
