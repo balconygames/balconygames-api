@@ -3,6 +3,7 @@ current_dir = $(shell pwd)
 DOCKER_REGISTRY_SERVER=registry.gitlab.com/balconygames/analytics
 DOCKER_REGISTRY_DASHBOARD=registry.gitlab.com/balconygames/analytics/dashboard
 DOCKER_COMPOSE=pipenv run docker-compose
+ANSIBLE=$(DOCKER_COMPOSE) -f deploy/ansible/docker-compose.deploy.yml run
 
 init:
 	pip install --user pipenv
@@ -53,10 +54,10 @@ deploy: release deploy.release
 .PHONY: deploy
 
 deploy.provision:
-	cd deploy/ansible ; pipenv run ansible-playbook -i ansible_hosts provision.yml --private-key=~/.ssh/balconygames.pem --extra-vars "@group_vars/prod.secure.yml" --extra-vars "@group_vars/prod.yml" --vault-password-file ~/.balconygames.pw
-.PHONY: deploy.new
+	$(ANSIBLE) provision
+.PHONY: deploy.provision
 
 deploy.release:
-	cd deploy/ansible ; pipenv run ansible-playbook -i ansible_hosts deploy.yml --private-key=~/.ssh/balconygames.pem --extra-vars "@group_vars/prod.secure.yml" --extra-vars "@group_vars/prod.yml" --vault-password-file ~/.balconygames.pw
+	$(ANSIBLE) release
 .PHONY: deploy.release
 

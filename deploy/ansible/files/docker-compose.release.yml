@@ -7,8 +7,6 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
       POSTGRES_PASSWORD: "59bf71f6-ca01-431b-95a3-1fb1d7aa7847"
-    ports:
-      - "5440:5432"
     volumes:
       - ./postgres:/var/lib/postgresql/
     logging:
@@ -17,39 +15,9 @@ services:
         max-file: "3"
       driver: "json-file"
 
-#  clickhouse:
-#    image: yandex/clickhouse-server:19.16.19.85
-#    container_name: analytics_clickhouse
-#    ports:
-#      - "8140:8123"
-#    volumes:
-#      - ./clickhouse:/var/lib/clickhouse/
-#    logging:
-#      options:
-#        max-size: "30m"
-#        max-file: "3"
-#      driver: "json-file"
-#
-#  nsq:
-#    image: nsqio/nsq:v1.2.0
-#    command: /nsqlookupd
-#    container_name: analytics_msq
-#    ports:
-#      - "4140:4150"
-#      - "4141:4151"
-#    volumes:
-#      - ./nsq:/var/lib/nsq/
-#    logging:
-#      options:
-#        max-size: "30m"
-#        max-file: "3"
-#      driver: "json-file"
-
   redis:
     image: redis:6.0.4-alpine
     container_name: analytics_redis
-    ports:
-      - "6340:6379"
     volumes:
       - ./redis:/data/
     logging:
@@ -183,3 +151,32 @@ services:
         max-size: "30m"
         max-file: "3"
       driver: "json-file"
+
+#  clickhouse:
+#    image: yandex/clickhouse-server:19.16.19.85
+#    container_name: analytics_clickhouse
+#    ports:
+#      - "8140:8123"
+#    volumes:
+#      - ./clickhouse:/var/lib/clickhouse/
+#    logging:
+#      options:
+#        max-size: "30m"
+#        max-file: "3"
+#      driver: "json-file"
+#
+#  nsq:
+#    image: nsqio/nsq:v1.2.0
+#    command: /nsqlookupd
+#    container_name: analytics_msq
+#    ports:
+#      - "4140:4150"
+#      - "4141:4151"
+#    volumes:
+#      - ./nsq:/var/lib/nsq/
+#    logging:
+#      options:
+#        max-size: "30m"
+#        max-file: "3"
+#      driver: "json-file"
+
