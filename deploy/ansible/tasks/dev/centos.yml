@@ -1,5 +1,0 @@
-- name: "install packages"
-  yum:
-    name:
-      - tmux
-    state: present

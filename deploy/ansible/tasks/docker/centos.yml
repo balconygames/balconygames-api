@@ -1,6 +1,0 @@
-- name: "install packages"
-  yum:
-    name:
-      - docker
-      - python3
-    state: present

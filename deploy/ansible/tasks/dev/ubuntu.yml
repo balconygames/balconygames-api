@@ -1,5 +1,0 @@
-- name: "install packages"
-  apt:
-    name:
-      - tmux
-    state: present
